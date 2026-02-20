@@ -4,6 +4,7 @@ import RoleSelect from "./Components/RoleSelect";
 import AuthOptions from "./Components/AuthOptions";
 import RegisterForm from "./Components/RegisterForm";
 import LoginForm from "./Components/LoginForm";
+import BakerDashboard from "./Components/BakerDashboard";
 
 
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/auth/:role" element={<AuthOptions />} />
         <Route path="/register/:role" element={<RegisterForm />} />
         <Route path="/login/:role" element={<LoginForm />} />
+        <Route path="/baker/dashboard" element={<BakerDashboard />} />
       </Routes>
     </Router>
   );
