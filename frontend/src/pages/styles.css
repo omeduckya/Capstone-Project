@@ -1121,3 +1121,180 @@ button {
     padding: 12px;
   }
 }
+
+
+/* --- welcome page layout --- */
+
+/* 1. the main background and centering */
+.full-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.gradient-bg {
+  background: linear-gradient(180deg, #fff9f0 0%, #ffe4e9 100%);
+}
+
+.welcome-content-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* 2. the circular logo at the top */
+.welcome-logo-circle {
+  width: 180px; /* matched to your screenshot size */
+  height: 180px;
+  background: white;
+  border-radius: 50%;
+  margin: 0 auto 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+.logo-img-main {
+  width: 80%;
+  height: auto;
+}
+
+/* 3. typography */
+.welcome-heading {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #2d1b1b;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.welcome-subheading {
+  font-size: 1.2rem;
+  color: #6d5a5a;
+  margin-bottom: 50px;
+  line-height: 1.6;
+}
+
+/* 4. the horizontal card row */
+.welcome-cards-row {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap; /* ensures it looks okay on mobile too */
+}
+
+.welcome-card-item {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  width: 440px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none; /* removes link underline */
+}
+
+.welcome-card-item:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+/* 5. icon containers */
+.icon-container {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.pink-bg { background-color: #ffeef0; }
+.blue-bg { background-color: #eef7ff; }
+
+.inner-icon { width: 28px; height: 28px; }
+
+/* 6. card text details */
+.card-info {
+  text-align: left;
+  flex: 1;
+}
+
+.card-info h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #333;
+  font-weight: 700;
+}
+
+.card-info p {
+  font-size: 0.9rem;
+  color: #777;
+  margin: 4px 0 0 0;
+}
+
+.arrow-small {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  margin-left: 10px;
+}
+
+.welcome-caption {
+  margin-top: 60px;
+  color: #8b7a7a;
+  font-size: 1rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.customization-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+/* settings page */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: 24px 0;
+}
+
+.icon-back {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-subtle);
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* responsive grid for options */
+@media (max-width: 600px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

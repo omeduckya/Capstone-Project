@@ -32,10 +32,10 @@ import MyCakes from "./pages/MyCakes";
 import EditCake from "./pages/EditCake";
 import AddCake from "./pages/AddCake";
 import Settings from "./pages/Settings";
-import Welcome from "./pages/Welcome";
 import BakerSignIn from "./pages/BakerSignIn";
 import BakerSignUp from "./pages/BakerSignUp";
 import AppLayout from "./pages/AppLayout";
+import Welcome from "./pages/Welcome";
 
 export default function App() {
   return (
