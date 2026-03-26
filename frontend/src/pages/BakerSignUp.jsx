@@ -26,7 +26,6 @@ export default function BakerSignUp() {
     }));
   };
   
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
