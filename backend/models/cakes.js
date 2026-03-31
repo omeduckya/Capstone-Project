@@ -13,7 +13,8 @@ const cakeSchema = new Schema({
   flavor: String,
   filling: String,
   orders: { type: Number, default: 0 },
-  rating: { type: Number, default: 5.0 }
+  rating: { type: Number, default: 5.0 },
+  notes: String
 });
 
 

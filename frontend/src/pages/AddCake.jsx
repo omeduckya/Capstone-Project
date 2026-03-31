@@ -20,6 +20,7 @@ export default function AddCake() {
     tiers: "",
     frosting: "",
     userId: userId, 
+    notes: "",
   });
 
   // deal change
@@ -185,40 +186,23 @@ export default function AddCake() {
         </section>
 
         {/* choice */}
-        <section className="card">
-          <h3 className="card-title">Customization Options</h3>
-          <p className="card-subtitle">Allow customers to personalize this cake</p>
-          <div className="checkbox-column">
-            <label className="checkbox">
-              <input type="checkbox" />{" "}
-              <span>
-                Allow custom messages
-                <span className="checkbox-sub">Customers can add personalized text</span>
-              </span>
-            </label>
-            <label className="checkbox">
-              <input type="checkbox" />{" "}
-              <span>
-                Allow color customization
-                <span className="checkbox-sub">Customers can choose cake colors</span>
-              </span>
-            </label>
-            <label className="checkbox">
-              <input type="checkbox" />{" "}
-              <span>
-                Rush orders available
-                <span className="checkbox-sub">Prepared in under 24 hours (extra fees)</span>
-              </span>
-            </label>
-            <label className="checkbox">
-              <input type="checkbox" />{" "}
-              <span>
-                Dietary options
-                <span className="checkbox-sub">Gluten-free, vegan, sugar-free options</span>
-              </span>
-            </label>
-          </div>
-        </section>
+       <section className="card">
+        <h3 className="card-title">Additional Notes</h3>
+        <p className="card-subtitle">
+          Add any extra details customers should know
+        </p>
+
+        <label className="field">
+          <span className="field-label">Message / Notes</span>
+          <textarea
+            name="notes"
+            className="textarea"
+            placeholder="e.g., Available for custom messages, vegan options, rush orders..."
+            value={formData.notes || ""}
+            onChange={handleChange}
+          />
+        </label>
+      </section>
       </form>
     </div>
   );
