@@ -56,7 +56,15 @@ const cakeSchema = new Schema({
   reviewNote: { type: String },
   reviewCreatedAt: { type: Date },
   price: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now }
+  servings: String,
+  prepTime: String,
+  size: String,
+  shape: String,
+  flavor: String,
+  filling: String,
+  orders: { type: Number, default: 0 },
+  rating: { type: Number, default: 5.0 },
+  notes: String
 });
 
 

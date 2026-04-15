@@ -694,13 +694,13 @@ mongoose
     startReminderLoop();
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
-  .catch((err) => console.log("MongoDB connection error:", err));
+  .catch((error) => console.log("MongoDB connection error:", error));
 
 // --------------------
 // Health check
 // --------------------
-app.get("/", (req, res) => {
-  res.send("Server is live!");
+app.get("/", (request, response) => {
+  response.send("Server is live!");
 });
 
 // --------------------
@@ -729,7 +729,7 @@ app.post("/api/register", async (req, res) => {
     avatarPreset,
   } = req.body;
   if (!name || !email || !password || !role) {
-    return res.status(400).json({ error: "All fields are required" });
+    return response.status(400).json({ error: "All fields are required" });
   }
 
   try {
@@ -766,20 +766,20 @@ app.post("/api/register", async (req, res) => {
     if (err.code === 11000) {
       res.status(400).json({ error: "Email already exists" });
     } else {
-      res.status(500).json({ error: "Server error" });
+      response.status(500).json({ error: "Server error" });
     }
   }
 });
 
 // Login
-app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
+app.post("/api/login", async (request, response) => {
+  const { email, password } = request.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "Invalid email or password" });
+    if (!user) return response.status(400).json({ error: "Invalid email or password" });
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(400).json({ error: "Invalid email or password" });
+    if (!isValid) return response.status(400).json({ error: "Invalid email or password" });
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
     res.json({
@@ -1056,7 +1056,7 @@ app.post("/api/order", async (req, res) => {
 });
 
 // Get user orders
-app.get("/api/orders/:userId", async (req, res) => {
+app.get("/api/orders/:userId", async (request, response) => {
   try {
     const orders = await Cake.find({
       $and: [
