@@ -1,79 +1,175 @@
-// src/pages/MyCakes.jsx
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./styles.css";
+import { resolveImageUrl } from "../utils/imageUrls";
 
-const cakes = [
-  { id: "1", name: "Rose Garden", price: "$85", orders: 24, rating: 4.9, revenue: "$2,040" },
-  { id: "2", name: "Chocolate Dream", price: "$95", orders: 18, rating: 4.8, revenue: "$1,710" },
-  { id: "3", name: "Vanilla Elegance", price: "$110", orders: 32, rating: 4.9, revenue: "$3,520" },
-  { id: "4", name: "Lemon Zest Bliss", price: "$75", orders: 16, rating: 4.7, revenue: "$1,125" },
-  { id: "5", name: "Red Velvet", price: "$90", orders: 28, rating: 4.9, revenue: "$2,520" },
-  { id: "6", name: "Strawberry Bliss", price: "$100", orders: 20, rating: 4.8, revenue: "$2,100" },
-];
+function formatPrice(val) {
+  if (val === undefined || val === null || Number.isNaN(Number(val))) return "$ó";
+  return `$${Number(val).toFixed(0)}`;
+}
+
+function formatRevenue(val) {
+  if (val === undefined || val === null || Number.isNaN(Number(val))) return "$ó";
+  return `$${Number(val).toLocaleString()}`;
+}
+
+function getBakerId() {
+  try {
+    const stored = localStorage.getItem("bakerUser");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return parsed?.id || parsed?._id || "";
+    }
+  } catch {
+    /* ignore */
+  }
+  return localStorage.getItem("id") || "";
+}
+
+function normalizeImage(apiBase, cake) {
+  const raw =
+    cake.mainImage ||
+    cake.imageUrl ||
+    (Array.isArray(cake.galleryImages) ? cake.galleryImages[0] : null);
+  return resolveImageUrl(apiBase, raw);
+}
 
 export default function MyCakes() {
   const navigate = useNavigate();
+  const [cakes, setCakes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const bakerId = getBakerId();
+
+  useEffect(() => {
+    if (!bakerId) return;
+    setIsLoading(true);
+    setLoadError("");
+    fetch(`${API_BASE_URL}/api/cakes?userId=${bakerId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCakes(data);
+          if (!data.length) {
+            setLoadError("No cakes listed yet. Add your first cake to start selling.");
+          }
+        } else {
+          setLoadError("Could not load cakes from server.");
+          setCakes([]);
+        }
+      })
+      .catch(() => {
+        setLoadError("Could not reach the server.");
+        setCakes([]);
+      })
+      .finally(() => setIsLoading(false));
+  }, [API_BASE_URL, bakerId]);
+
+  const stats = useMemo(() => {
+    const totalCakes = cakes.length;
+    const totalOrders = cakes.reduce((sum, c) => sum + (c.orders || 0), 0);
+    const avgRating =
+      cakes.length === 0
+        ? 0
+        : cakes.reduce((sum, c) => sum + (c.rating || 0), 0) / cakes.length;
+    const revenue = cakes.reduce(
+      (sum, c) => sum + (c.revenue || (c.price || 0) * (c.orders || 0)),
+      0
+    );
+    return {
+      totalCakes,
+      totalOrders,
+      avgRating: avgRating ? avgRating.toFixed(1) : "0.0",
+      revenue,
+    };
+  }, [cakes]);
 
   return (
     <div className="page">
       <header className="page-header">
         <div>
           <h1 className="page-title">My Cake Gallery</h1>
-          <p className="page-subtitle">Manage and showcase your creations</p>
+          <p className="page-subtitle">
+            {isLoading ? "Loading your cakes..." : "Manage and showcase your creations"}
+          </p>
         </div>
-        <button
-          className="primary-btn"
-          onClick={() => navigate("/cakes/new")}
-        >
+        <button className="primary-btn" onClick={() => navigate("/cakes/new")}>
           + Add New Cake
         </button>
       </header>
-
-      <section className="stat-row">
+<section className="stat-row">
         <div className="stat-card small">
           <span className="stat-label">Total Cakes</span>
-          <span className="stat-value">6</span>
+          <span className="stat-value">{stats.totalCakes}</span>
         </div>
         <div className="stat-card small">
           <span className="stat-label">Total Orders</span>
-          <span className="stat-value">138</span>
+          <span className="stat-value">{stats.totalOrders}</span>
         </div>
         <div className="stat-card small">
           <span className="stat-label">Avg. Rating</span>
-          <span className="stat-value">4.8 ‚òÖ</span>
+          <span className="stat-value">{stats.avgRating} ?</span>
         </div>
         <div className="stat-card small">
           <span className="stat-label">Total Revenue</span>
-          <span className="stat-value">$13,015</span>
+          <span className="stat-value">{formatRevenue(stats.revenue)}</span>
         </div>
       </section>
 
       <section className="grid-cards">
-        {cakes.map((c) => (
-          <article key={c.id} className="cake-card">
-            <div className="cake-thumb" />
+        {cakes.map((cake) => (
+          <article key={cake._id} className="cake-card">
+            <div
+              className="cake-thumb"
+              style={
+                normalizeImage(API_BASE_URL, cake)
+                  ? {
+                      backgroundImage: `url(${normalizeImage(API_BASE_URL, cake)})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }
+                  : undefined
+              }
+            />
             <div className="cake-body">
               <div className="cake-header">
-                <h3>{c.name}</h3>
-                <span className="cake-price">{c.price}</span>
+                <h3>{cake.name || "Untitled Cake"}</h3>
+                <span className="cake-price">{formatPrice(cake.price)}</span>
               </div>
               <div className="cake-metrics">
-                <div className="badge"> {c.orders} orders</div>
-                <div className="badge">‚≠ê {c.rating}</div>
+                <div className="badge">{cake.orders ? `${cake.orders} orders` : "ó orders"}</div>
+                <div className="badge">? {cake.rating || "ó"}</div>
               </div>
               <div className="cake-footer">
                 <span className="revenue-label">Total Revenue</span>
-                <span className="revenue-value">{c.revenue}</span>
+                <span className="revenue-value">
+                  {formatRevenue(cake.revenue || (cake.price || 0) * (cake.orders || 0))}
+                </span>
               </div>
             </div>
-            <button
-              className="pill-button full"
-              onClick={() => navigate(`/cakes/${c.id}/edit`)}
-            >
-              Edit Cake
-            </button>
+            <div style={{ display: "flex", justifyContent: "center", paddingBottom: 14 }}>
+              <Link className="pill-button centered" to={`/cakes/${cake._id}/edit`}>
+                Edit Cake
+              </Link>
+            </div>
           </article>
         ))}
+
+        {!isLoading && cakes.length === 0 && (
+          <article className="card" style={{ textAlign: "center", padding: "40px 24px" }}>
+            <h3 className="card-title">No cakes listed yet</h3>
+            <p className="card-subtitle" style={{ marginBottom: 18 }}>
+              Add your first cake to build your storefront and start taking orders.
+            </p>
+            <button className="primary-btn" type="button" onClick={() => navigate("/cakes/new")}>
+              Add First Cake
+            </button>
+          </article>
+        )}
       </section>
     </div>
   );
 }
+
