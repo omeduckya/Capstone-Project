@@ -760,11 +760,11 @@ app.post("/api/register", async (req, res) => {
     } catch (mailError) {
       console.error("Failed to send welcome email", mailError);
     }
-    res.status(201).json({ message: "User registered successfully", welcomeEmailSent });
+    response.status(201).json({ message: "User registered successfully", welcomeEmailSent });
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
-      res.status(400).json({ error: "Email already exists" });
+      response.status(400).json({ error: "Email already exists" });
     } else {
       response.status(500).json({ error: "Server error" });
     }
@@ -782,7 +782,7 @@ app.post("/api/login", async (request, response) => {
     if (!isValid) return response.status(400).json({ error: "Invalid email or password" });
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
-    res.json({
+    response.json({
       message: "Login successful",
       token,
       role: user.role,
@@ -820,7 +820,7 @@ app.post("/api/login", async (request, response) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    response.status(500).json({ error: "Server error" });
   }
 });
 
